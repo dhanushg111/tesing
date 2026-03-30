@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DLP Agent Login</title>
+    <style>
+      body { font-family: Segoe UI, sans-serif; margin: 12px; min-width: 280px; }
+      input, button { width: 100%; margin-top: 6px; padding: 8px; }
+      button { background: #1d4ed8; color: #fff; border: none; border-radius: 6px; }
+      .muted { color: #475569; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h3>Browser DLP Agent</h3>
+    <input id="apiBase" placeholder="API base" value="http://localhost:4000/api" />
+    <input id="username" placeholder="username" value="admin" />
+    <input id="password" type="password" placeholder="password" value="admin123" />
+    <button id="saveBtn">Save + Login</button>
+    <p id="status" class="muted"></p>
+    <script src="popup.js"></script>
+  </body>
+</html>
