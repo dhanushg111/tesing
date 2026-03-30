@@ -39,6 +39,12 @@ npm install
 npm run start
 ```
 
+By default the backend now binds to `127.0.0.1` for local-only testing (override with `HOST`).
+
+```bash
+HOST=127.0.0.1 npm run start
+```
+
 In a second terminal, serve the dashboard:
 
 ```bash

@@ -8,6 +8,7 @@ app.use(cors({ origin: process.env.CORS_ORIGIN || true }));
 app.use(express.json({ limit: "2mb" }));
 
 const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || "127.0.0.1";
 const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
 const TOKEN_TTL_MS = Number(process.env.TOKEN_TTL_MS || 1000 * 60 * 60 * 8);
 
@@ -240,12 +241,25 @@ app.post("/api/events", authMiddleware, (req, res) => {
     return res.status(400).json({ error: "Invalid page_url" });
   }
 
-  const findings = scanTextForSensitiveData(String(payload?.text || ""), payload?.keywords ?? []);
+  const text = String(payload?.text || "");
+  const lowered = text.toLowerCase();
+  const findings = scanTextForSensitiveData(text, payload?.keywords ?? []);
+
   const matchedPolicy = policies.find((policy) => {
     if (!policy.enabled || !policyAppliesToActor(policy, req.user)) return false;
     if (!policy.targets.includes(action)) return false;
     if (!domainMatch(host, policy.conditions.target_domains)) return false;
-    return findings.some((f) => f.data_type === policy.conditions.data_type);
+
+    const keywords = Array.isArray(policy.conditions.keywords) ? policy.conditions.keywords : [];
+    const keywordHit = keywords.some((kw) => lowered.includes(String(kw).toLowerCase()));
+
+    if (policy.conditions.data_type === "keyword") return keywordHit;
+
+    const typeHit = findings.some((f) => f.data_type === policy.conditions.data_type);
+    if (!typeHit) return false;
+
+    if (keywords.length > 0 && !keywordHit) return false;
+    return true;
   });
 
   const event = {
@@ -285,6 +299,6 @@ app.get("/api/metrics", authMiddleware, (_, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`DLP backend running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`DLP backend running on http://${HOST}:${PORT}`);
 });

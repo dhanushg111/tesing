@@ -17,11 +17,16 @@ function matchesDetection(dataType, text) {
     credit_card: /\b(?:\d[ -]*?){13,16}\b/,
     phone: /\b(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/,
     ssn: /\b\d{3}-\d{2}-\d{4}\b/,
-    keyword: /.*/,
   };
 
-  if (dataType === "keyword") return true;
+  if (dataType === "keyword") return false;
   return map[dataType]?.test(text) || false;
+}
+
+function hasKeywordMatch(text, keywords = []) {
+  if (!Array.isArray(keywords) || keywords.length === 0) return false;
+  const lowered = text.toLowerCase();
+  return keywords.some((kw) => lowered.includes(String(kw).toLowerCase()));
 }
 
 function evaluatePolicies(action, text, policies) {
@@ -31,9 +36,17 @@ function evaluatePolicies(action, text, policies) {
     if (!policy.targets.includes(action)) continue;
     if (!domainMatches(host, policy.conditions.target_domains)) continue;
 
-    const keywordHit = (policy.conditions.keywords || []).some((kw) => text.toLowerCase().includes(kw.toLowerCase()));
+    const keywords = policy.conditions.keywords || [];
+    const keywordHit = hasKeywordMatch(text, keywords);
     const typeHit = matchesDetection(policy.conditions.data_type, text);
-    if (!keywordHit && !typeHit) continue;
+
+    if (policy.conditions.data_type === "keyword") {
+      if (!keywordHit) continue;
+      return policy;
+    }
+
+    if (!typeHit) continue;
+    if (keywords.length > 0 && !keywordHit) continue;
 
     return policy;
   }
