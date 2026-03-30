@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Browser DLP Agent",
+  "version": "1.0.1",
+  "description": "Centralized browser DLP agent with policy polling and enforcement",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": ["<all_urls>", "http://localhost:4000/*"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Browser DLP Agent",
+    "default_popup": "popup.html"
+  }
+}

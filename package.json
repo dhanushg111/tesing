@@ -1,0 +1,15 @@
+{
+  "name": "browser-dlp-platform",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Browser-Based DLP Platform with centralized policy control",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server.js",
+    "check": "node --check backend/server.js && node --check extension/background.js && node --check extension/content.js && node --check extension/popup.js && node --check dashboard/app.js && node --check shared/detection.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

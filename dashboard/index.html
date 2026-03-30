@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser DLP Platform Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Browser-Based DLP Platform</h1>
+      <p>Centralized policy control, alerts, and user/device visibility.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Login</h2>
+        <div class="grid two">
+          <input id="username" placeholder="username (admin)" value="admin" />
+          <input id="password" type="password" placeholder="password" value="admin123" />
+        </div>
+        <button id="loginBtn">Login</button>
+        <small id="loginStatus"></small>
+      </section>
+
+      <section class="card" id="metricsCard">
+        <div class="row"><h2>Platform Metrics</h2><button id="refreshMetricsBtn">Refresh</button></div>
+        <div class="metrics-grid">
+          <article><small>Total events</small><strong id="mTotal">0</strong></article>
+          <article><small>Enforcement success rate</small><strong id="mRate">0%</strong></article>
+          <article><small>Active users</small><strong id="mUsers">0</strong></article>
+          <article><small>Active devices</small><strong id="mDevices">0</strong></article>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <h2>Policies</h2>
+          <button id="refreshPoliciesBtn">Refresh</button>
+        </div>
+        <form id="policyForm" class="grid">
+          <input id="policyName" placeholder="Policy name" required />
+          <select id="policyMode">
+            <option value="block">Block</option>
+            <option value="warn">Warn</option>
+            <option value="allow">Allow + log</option>
+          </select>
+          <select id="policyDataType">
+            <option value="credit_card">Credit Card</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+            <option value="ssn">SSN</option>
+            <option value="keyword">Keyword</option>
+          </select>
+          <input id="policyDomains" placeholder="Domains (comma-separated, e.g. gmail.com,drive.google.com)" />
+          <input id="policyKeywords" placeholder="Keywords (optional, comma-separated)" />
+          <button type="submit">Create Policy</button>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Mode</th>
+              <th>Data Type</th>
+              <th>Domains</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="policiesTable"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <h2>Alerts</h2>
+          <button id="refreshAlertsBtn">Refresh</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>User</th>
+              <th>Device</th>
+              <th>Action</th>
+              <th>Policy</th>
+              <th>Decision</th>
+              <th>Severity</th>
+            </tr>
+          </thead>
+          <tbody id="alertsTable"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
